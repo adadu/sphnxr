@@ -30,15 +30,15 @@
 
 (
 // 6.  Add a couple of effects.
-~rose.addEffect(\reverb, \freeverb);
-~rose.addEffect(\distortion, \dist);
-~rose.addEffect(\reslpf, \rlpf);
+~draft.addEffect(\reverb, \freeverb);
+~draft.addEffect(\distortion, \dist);
+~draft.addEffect(\reslpf, \rlpf);
 
 )
 
 // note: to see available effects: ~peer.effectsList;
 ~river.effectsList;
-~rose.effectsList;
+~draft.effectsList;
 
 // note: if for some reason the effects lists arent updating, have the machine that isn't working run this:
 ~addrBook.broadcastEffectList;
@@ -46,24 +46,27 @@
 
 
 
+a = Pseq(([48,50,52,53,55,57,58] * 2/3).midicps, inf);
 (
 // 7.  Now set the individual pdefns for one synth
-
-Pdefn(\sinTarget, \rose, inf);
+Pdefn(\sinTarget, \draft, inf);
 Pdefn(\sinInstrument, \sin, inf);
 Pdefn(\sinOutBus, \masterOut, inf);
-Pdefn(\sinFreq, Pshuf(([48,50,52,53,55,57,58]).midicps, inf));
-Pdefn(\sinAmp, 0.25, inf);
-Pdefn(\sinAtt, 0.01, inf);
-Pdefn(\sinWait, Pseq([0.5], inf));
-Pdefn(\sinDuration, Pseq([0.5], inf));
-Pdefn(\sinPan, Pseq([0], inf));
-Pdefn(\sinMod1, 0.0001, inf);
-Pdefn(\sinMod2, 0.0001, inf);
+Pdefn(\sinFreq, a);
+Pdefn(\sinMod1, Pseq((1..8), inf));
+Pdefn(\sinAmp, 0.3, inf);
+Pdefn(\sinAtt, 0.7, inf);
+Pdefn(\sinWait, Pseq((0.4..1), inf));
+Pdefn(\sinDuration, Pseq((0.5..0.8), inf));
+Pdefn(\sinPan, Pseq((-1.00..1.00), inf));
+Pdefn(\sinMod2, Pseq(([a] / 100), inf));
 )
 
+~sin.play;
+~sin.stop;
+
 // 8. this is just to make sure the global tempo is set to something reasonable.
-~clock.setGlobalTempo(1);
+~clock.setGlobalTempo(5);
 
 
 // 9.  Start the synth
@@ -87,7 +90,7 @@ Pdefn(\sinFreq,
 
 (
 // 10.  Now set the individual pdefns for a second synth
-Pdefn(\ixiTarget, \rose, inf);
+Pdefn(\ixiTarget, \draft, inf);
 Pdefn(\ixiInstrument, \ixibass, inf);
 Pdefn(\ixiOutBus, \masterOut, inf);
 Pdefn(\ixiFreq, Pshuf(([48,50,52,53,55,57,58]).midicps, inf));
@@ -110,8 +113,8 @@ Pdefn(\sinWait, Pseq([0.5], inf));
 
 // 14.  Change the outbus to an effect
 (
-~rose.setEffect(\distortion, \postGain, 0.05);
-~rose.setEffect(\distortion, \preGain, 20.0);
+~draft.setEffect(\distortion, \postGain, 0.05);
+~draft.setEffect(\distortion, \preGain, 20.0);
 
 Pdefn(\ixiOutBus, \reverb, inf);
 Pdefn(\sinOutBus, \distortion, inf);
@@ -139,9 +142,9 @@ Pdefn(\sinMod2, Prand([0, 0.001,0.010,0.0125,0.025,0.05,0.1, 0.5], inf));
 
 // 19.  Change the effect and the modulation
 (
-~rose.setEffect(\reverb, \room, 0.75);
-~rose.setEffect(\reverb, \mix, 0.5);
-~rose.setEffect(\reverb, \damp, 0.5);
+~draft.setEffect(\reverb, \room, 0.75);
+~draft.setEffect(\reverb, \mix, 0.5);
+~draft.setEffect(\reverb, \damp, 0.5);
 Pdefn(\sinMod1, Prand([0, 0.001,0.010,0.0125,0.025,0.05,0.1,0.5], inf));
 )
 
@@ -177,7 +180,7 @@ Pdefn(\sinMod2, Pseq([0], inf));
 
 (
 // 24.  Now set the individual pdefns for the granular synth
-Pdefn(\granTarget, \rose, inf);
+Pdefn(\granTarget, \draft, inf);
 Pdefn(\granInstrument, \gran, inf);
 Pdefn(\granOutBus, \reverb, inf);
 Pdefn(\granEnvBuf, -1, inf);
@@ -221,7 +224,7 @@ Pdefn(\granWait, Prand([0.5, 1.0, 1.5, 2.0, 5.0], inf));
 (
 // 7.  Now set the individual pdefns for one synth
 
-Pdefn(\pulseTarget, \rose, inf);
+Pdefn(\pulseTarget, \draft, inf);
 Pdefn(\pulseInstrument, \pulse, inf);
 Pdefn(\pulseOutBus, \reslpf, inf);
 Pdefn(\pulseFreq,
@@ -246,12 +249,12 @@ Pdefn(\pulseInt, 0.5, inf);
 
 
 
-~rose.setEffect(\reslpf, \freq, 4000);
-~rose.setEffect(\reslpf, \freq, 400);
-~rose.setEffect(\reslpf, \rq, 0.0125);
-~rose.setEffect(\reslpf, \mix, 0.25);
-~rose.setEffect(\reslpf, \mix, 0.75);
-~rose.setEffect(\reslpf, \mix, 0.99);
+~draft.setEffect(\reslpf, \freq, 4000);
+~draft.setEffect(\reslpf, \freq, 400);
+~draft.setEffect(\reslpf, \rq, 0.0125);
+~draft.setEffect(\reslpf, \mix, 0.25);
+~draft.setEffect(\reslpf, \mix, 0.75);
+~draft.setEffect(\reslpf, \mix, 0.99);
 
 ~pulse.stop;
 ~pulse.step;
